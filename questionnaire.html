@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferv Analytics</title>
+    <style>
+        /* Reset some default browser styles */
+        body,
+        h1,
+        h2,
+        p,
+        form,
+        button {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* header {
+            display: flex;
+            top: 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            padding-left: 50px;
+            padding-right: 50px;
+            color: rgb(54, 53, 53);
+        } */
+
+        /* Style for the fixed header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: white;
+            /* Optional: background color */
+            padding-left: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Optional: shadow for visibility */
+        }
+
+        /* Style for the main content */
+        .content {
+            margin-top: 60px;
+            /* Adjust to header height to prevent overlap */
+            padding: 1rem;
+            /* Optional padding */
+        }
+
+
+        img {
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Centered Container */
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Description Section */
+        .description {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .description h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #2e2e2e;
+            font-weight: 700;
+        }
+
+        .description p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Form Section */
+        .form-section {
+            width: 50%;
+            background-color: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-section h3 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #2e2e2e;
+            font-weight: 700;
+        }
+
+        .form-section label {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .form-section input,
+        .form-section select {
+            width: 100%;
+            height: 50px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid rgb(199, 197, 199);
+            border-radius: 30px;
+            margin: 15px 0;
+            color: black;
+            font-size: 1rem;
+            font-weight: 500;
+            box-sizing: border-box;
+            padding-left: 20px;
+        }
+
+        .form-section input:focus,
+        .form-section select:focus {
+            outline: none;
+            border-bottom: 2px solid rgb(199, 114, 255);
+        }
+
+        .form-section input::placeholder {
+            color: rgb(80, 80, 80);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+
+        .submit {
+            /* display: flex; */
+            /* justify-content: center; */
+            /* align-items: center; */
+            width: 20%;
+            text-align: center;
+            background: linear-gradient(175deg, #fb53f5, #f8bf3a);
+            color: white;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            padding: 15px 0;
+            text-decoration: none;
+            cursor: pointer;
+            border-color: white;
+        }
+
+        /* #button {
+            width: 150px;
+            border: none;
+            background: transparent;
+            color: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            cursor: inherit;
+        } */
+
+        .submit:hover {
+            background: linear-gradient(175deg, #f8bf3a, #fb53f5);
+        }
+
+        .submit:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+
+
+        #button::after {
+            content: "";
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.253);
+            height: 100%;
+            width: 150px;
+            top: 0;
+            left: -200px;
+            border-bottom-right-radius: 100px;
+            border-top-left-radius: 100px;
+            filter: blur(10px);
+            transition-duration: .5s;
+        }
+
+        #button:hover::after {
+            transform: translateX(600px);
+            transition-duration: .5s;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <header>
+        <!-- Logo -->
+        <div class="logo"><a href="intro.html"><img src="logo.png" alt="Logo" style="width: 80px; padding-left: 15px;"></a></div>
+
+    </header>
+
+    <main class="content">
+        <div class="center-container">
+            <div class="form-section">
+                <h3>Welcome! Enter the domain URL you wish to analyze:</h3>
+
+                <!-- Purpose of Visit -->
+                <input type="text" id="websiteUrl" placeholder="https://www.example.com">
+                <button id="button" type="button" class="submit" onclick="submitUrl()">Submit</button>
+            </div>
+
+            <script>
+                function submitUrl() {
+                    const url = document.getElementById('websiteUrl').value.trim();
+                    if (url) {
+                        // Send URL to backend to process and store in Firebase
+                        fetch('http://localhost:3000/store-url', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ url: url })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert('URL data stored successfully!');
+                                    window.location.href = "dashboard.html"; // Redirect to the dashboard
+                                } else {
+                                    alert('Failed to store data.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred.');
+                            });
+                    } else {
+                        alert('Please enter a valid website URL.');
+                    }
+                }
+            </script>
+
+</body>
+
+</html>

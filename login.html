@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frev Analytics</title>
+    <style>
+        /* Reset some default browser styles */
+        body,
+        h1,
+        h2,
+        p,
+        form,
+        button {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        img {
+            display: block;
+            /* Removes inline spacing */
+            margin: 0;
+            /* Removes margin around the image */
+            padding: 0;
+            /* Removes padding around the image */
+        }
+
+        /* .image-container {
+            padding: 0;
+            margin: 0;
+        } */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: white;
+            /* Optional: background color */
+            padding-left: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Optional: shadow for visibility */
+        }
+
+        /* Style for the main content */
+        .content {
+            margin-top: 100px;
+            /* Adjust to header height to prevent overlap */
+            padding: 1rem;
+            /* Optional padding */
+        }
+
+        /* Center the login form */
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Full viewport height */
+        }
+
+        /* Sign-In Form Styles */
+        .form_main {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(255, 255, 255);
+            padding: 70px;
+            border-radius: 30px;
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
+        }
+
+        .heading {
+            font-size: 2.5em;
+            color: #2e2e2e;
+            font-weight: 700;
+            margin: 15px 0 30px 0;
+        }
+
+        .inputContainer {
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inputIcon {
+            position: absolute;
+            left: 10px;
+        }
+
+        .inputField {
+            width: 100%;
+            height: 50px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid rgb(199, 197, 199);
+            border-radius: 30px;
+            margin: 15px 0;
+            color: black;
+            font-size: 1em;
+            font-weight: 500;
+            box-sizing: border-box;
+            padding-left: 30px;
+        }
+
+        .inputField:focus {
+            outline: none;
+            border-bottom: 2px solid rgb(199, 114, 255);
+        }
+
+        .inputField::placeholder {
+            color: rgb(80, 80, 80);
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        /* Style for anchor tag to make it look like a button */
+        .submit {
+            display: inline-block;
+            width: 50%;
+            text-align: center;
+            color: white;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            padding: 10px 0;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Ensure that the div inside the anchor tag looks like the button (for Option 2) */
+        /* Remove default outline and border on focus */
+        #button {
+            position: relative;
+            width: 80%;
+            border: none;
+            /* Remove the border */
+            background: linear-gradient(175deg, #fb53f5, #f8bf3a);
+            height: 50px;
+            padding: 15px 40px 15px 40px;
+            color: white;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            margin: 0 auto;
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+            /* Remove the outline that appears on focus */
+        }
+
+
+        #button::after {
+            content: "";
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.253);
+            height: 100%;
+            width: 150px;
+            top: 0;
+            left: -200px;
+            border-bottom-right-radius: 100px;
+            border-top-left-radius: 100px;
+            filter: blur(10px);
+            transition-duration: .5s;
+        }
+
+        #button:hover::after {
+            transform: translateX(600px);
+            transition-duration: .5s;
+        }
+
+
+
+
+        .signupContainer {
+            margin: 0;
+            /* margin-top: 50px; */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .signupContainer p {
+            font-size: 1em;
+            font-weight: 500;
+            color: black;
+        }
+
+        .signupContainer a {
+            font-size: 1em;
+            font-weight: 500;
+            /* width: 40%; */
+            /* text-align: center; */
+            /* background-color: #2e2e2e; */
+            color: rgb(23, 21, 21);
+            /* text-decoration: ; */
+            padding: 8px 5px;
+            /* border-radius: 20px; */
+        }
+
+        .description {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .description h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .description p {
+            font-size: 1rem;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="image-container">
+            <a href="intro.html"><img src="logo.png" alt="Logo" style="width: 80px; padding-left: 15px;"></a>
+        </div>
+    </header>
+    <main class="content">
+        <div>
+            <section class="description">
+                <h2>Analyze Your Website Traffic Efficiently</h2>
+                <p>Our platform connects seamlessly with your Google Analytics data to provide insightful reports on
+                    visitor
+                    trends, page views, bounce rates, and user behavior. With clear visualizations, you can better
+                    understand how users interact with your website and optimize for better performance.</p>
+            </section>
+        </div>
+        <!-- Centered Container -->
+        <div class="center-container">
+            <!-- Login Form -->
+            <form class="form_main" id="loginForm" method="POST" action="/login">
+                <p class="heading">Login</p>
+                <div class="inputContainer">
+                    <input placeholder="Username" id="username" class="inputField" type="text" required>
+                </div>
+                <div class="inputContainer">
+                    <input placeholder="Password" id="password" class="inputField" type="password" required>
+                </div>
+
+                <button id="button" type="submit">Login</button>
+
+                <div class="loginContainer">
+                    <p>Don't have an account? <a href="/public/signup.html" style="color:black">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Simulated user credentials stored in an object
+        const validUsers = {
+            'user1': 'password123',  // Example username and password
+            'user2': 'securePass!456'  // Another example
+        };
+
+        const form = document.getElementById('loginForm');
+        const usernameField = document.getElementById('username');
+        const passwordField = document.getElementById('password');
+        const button = document.getElementById('button');
+
+        // Error message container for invalid login
+        const errorMessage = document.createElement('div');
+        errorMessage.classList.add('error-message');
+        form.appendChild(errorMessage);
+
+        // Form submission handler
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const username = usernameField.value.trim();
+            const password = passwordField.value.trim();
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Login successful') {
+                        window.location.href = data.redirectUrl;  // Redirect to dashboard
+                    } else {
+                        errorMessage.textContent = data.message;  // Show error message
+                    }
+                })
+                .catch(error => {
+                    errorMessage.textContent = 'An error occurred. Please try again.'; // Handle errors
+                });
+
+            // Check if the entered username and password are valid
+            if (validUsers[username] && validUsers[username] === password) {
+                // Valid credentials: Proceed to the next page
+                window.location.href = "dashboard.html"; // Redirect to the next page
+            } else {
+                // Invalid credentials: Show error message
+                errorMessage.textContent = 'Invalid username or password. Please try again.';
+            }
+        });
+    </script>
+</body>
+
+</html>

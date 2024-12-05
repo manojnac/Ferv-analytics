@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Traffic Map</title>
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCVq9WeE1hqTdMsdT3miAUbTc9g0z0QjJ8",
+            authDomain: "swat-173ca.firebaseapp.com",
+            databaseURL: "https://swat-173ca-default-rtdb.firebaseio.com",
+            projectId: "swat-173ca",
+            storageBucket: "swat-173ca.firebasestorage.app",
+            messagingSenderId: "948374024673",
+            appId: "1:948374024673:web:b224c6b7262ebf927362a0",
+            measurementId: "G-8HYY41WFS0"
+        };
+
+        // Initialize Firebase app
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize the map
+            var map = L.map('map').setView([20.0, 0.0], 2); // Default view: centered globally
+
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Reference geolocation data in Firebase
+            const geoRef = ref(db, 'geolocations');
+
+            // Fetch and plot geolocation data
+            onValue(geoRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const locations = snapshot.val();
+                    Object.keys(locations).forEach(visitorID => {
+                        const visitorData = locations[visitorID];
+
+                        // Count visitors for the specific location
+                        const locationCount = Object.keys(visitorData).length;
+
+                        Object.keys(visitorData).forEach(timestamp => {
+                            const location = visitorData[timestamp];
+                            if (location.latitude && location.longitude) {
+                                L.marker([location.latitude, location.longitude]).addTo(map)
+                                    .bindPopup(`<b>Visitors:</b> ${locationCount}<b>`)
+                                    .on('mouseover', function (e) {
+                                        this.openPopup();
+                                    })
+                                    .on('mouseout', function (e) {
+                                        this.closePopup();
+                                    });
+                            }
+                        });
+                    });
+                } else {
+                    console.log('No geolocation data available.');
+                }
+            }, (error) => {
+                console.error('Error fetching geolocation data:', error);
+            });
+
+            // Function to toggle sidebar
+            // document.getElementById('toggleSidebar').addEventListener('click', () => {
+            //     const sidebar = document.getElementById('sidebar');
+            //     sidebar.classList.toggle('collapsed');
+            // });
+        });
+    </script>
+</head>
+
+<body>
+    <main class="content">
+        <header>
+            <a href="intro.html"><img src="logo.png" alt="Logo" style="width: 80px; padding-left: 15px;"></a>
+        </header>
+
+        <div class="app">
+            <div class="sidebar" id="sidebar">
+                <button class="toggle-btn" id="toggleSidebar">☰</button>
+                <h2>Dashboard</h2>
+                <ul>
+                    <li><i class="fas fa-chart-line"></i> <a href="dashboard.html"
+                            style="text-decoration: none; color: white;"><span>Overview</span></a></li>
+                    <li><i class="fas fa-chart-line"></i> <a href="userBehavior.html"
+                            style="text-decoration: none; color: white;"><span>User Behavior</span></a></li>
+                    <li class="active"><i class="fas fa-cog"></i> <span>Global Traffic Map</span></li>
+                    <li><i class="fas fa-globe"></i> <a href="questionnaire.html"
+                            style="text-decoration: none; color:white">
+                            <span>Track New Website</span></a></li>
+                    <li><i class="fas fa-globe"></i> <a href="instructions.html"
+                            style="text-decoration: none; color:white">
+                            <span>Instructions</span></a></li>
+                </ul>
+            </div>
+
+            <div class="main-content">
+                <h1>Real-Time Global Traffic Map</h1>
+                <div id="map" style="height: 500px;"></div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

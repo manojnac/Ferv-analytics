@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructions - Website Traffic Analysis</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .blog-section {
+            /* background: rgba(236, 236, 236, 0.315); */
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+        }
+
+        .trc-section {
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            position: relative;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        pre code {
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            color: #333;
+        }
+
+        h2,
+        h3 {
+            margin-bottom: 15px;
+        }
+
+        p,
+        ul {
+            margin-bottom: 15px;
+        }
+
+        #button {
+            position: relative;
+            width: 10%;
+            border: none;
+            /* Remove the border */
+            background: linear-gradient(175deg, #fb53f5, #f8bf3a);
+            height: 50px;
+            padding: 15px 40px 15px 40px;
+            color: white;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            margin-left:1300px;
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+            /* Remove the outline that appears on focus */
+        }
+
+
+        #button::after {
+            content: "";
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.253);
+            height: 100%;
+            width: 150px;
+            top: 0;
+            left: -200px;
+            border-bottom-right-radius: 100px;
+            border-top-left-radius: 100px;
+            filter: blur(10px);
+            transition-duration: .5s;
+        }
+
+        #button:hover::after {
+            transform: translateX(600px);
+            transition-duration: .5s;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Instructions</h1>
+    </header>
+
+    <!-- Section 1 -->
+    <div class="blog-section">
+        <h2>Include tracker script in your website</h2>
+        <p>Please include our tracker script in the HTML page of the website whose traffic you want to track.</p>
+
+        <!-- Tracker Script 1 -->
+        <div class="trc-section">
+            <h3>Tracker Script 1:</h3>
+            <p>This tracker script needs to be embedded in the body of your website's index page.</p>
+            <button class="copy-btn" onclick="copyToClipboard('script1')">Copy</button>
+            <pre><code id="script1">
+                // Import necessary Firebase modules from the Firebase SDK
+                import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+                import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+
+                // Firebase configuration
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCVq9WeE1hqTdMsdT3miAUbTc9g0z0QjJ8",
+                    authDomain: "swat-173ca.firebaseapp.com",
+                    databaseURL: "https://swat-173ca-default-rtdb.firebaseio.com",
+                    projectId: "swat-173ca",
+                    storageBucket: "swat-173ca.appspot.com",
+                    messagingSenderId: "948374024673",
+                    appId: "1:948374024673:web:b224c6b7262ebf927362a0",
+                    measurementId: "G-8HYY41WFS0"
+                };
+
+                // Initialize Firebase app
+                const app = initializeApp(firebaseConfig);
+
+                // Initialize Firebase Realtime Database
+                const db = getDatabase(app);
+
+                // Helper functions
+                function generateVisitorID() {
+                    return '_' + Math.random().toString(36).substr(2, 9);
+                }
+
+                // Retrieve or set Visitor ID
+                let visitorID = localStorage.getItem('visitorID') || generateVisitorID();
+                localStorage.setItem('visitorID', visitorID);
+
+                // Track session data
+                let sessionStartTime = Date.now();
+                let hasNavigated = false;
+                let clickCount = 0;
+
+                // Function to send data to Firebase
+                function sendDataToFirebase(data, path) {
+                    const dataRef = ref(db, path);
+                    set(dataRef, data)
+                        .then(() => {
+                            console.log('Data successfully written to Firebase:', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error writing data to Firebase:', error);
+                        });
+                }
+
+                // Function to track page view count for the day
+                async function trackPageViewCount() {
+                    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                    const pageViewRef = ref(db, `pageViewsPerDay/${currentDate}`);
+                    const snapshot = await get(pageViewRef);
+
+                    let pageViewCount = 0;
+
+                    if (snapshot.exists()) {
+                        pageViewCount = snapshot.val(); // Get the current page view count for today
+                    }
+
+                    // Increment the count
+                    pageViewCount++;
+
+                    // Save the updated page view count back to Firebase
+                    sendDataToFirebase(pageViewCount, `pageViewsPerDay/${currentDate}`);
+                }
+
+                // Function to track sessions (total and single-page)
+                async function trackSessions() {
+                    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                    const sessionsRef = ref(db, `sessions/${currentDate}`);
+                    const snapshot = await get(sessionsRef);
+
+                    let totalSessions = 0;
+                    let singlePageSessions = 0;
+                    let totalClicks = 0;
+                    let totalSessionDuration = 0;
+
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        totalSessions = data.totalSessions || 0;
+                        singlePageSessions = data.singlePageSessions || 0;
+                        totalClicks = data.totalClicks || 0;
+                        totalSessionDuration = data.totalSessionDuration || 0;
+                    }
+
+                    // Increment total sessions count
+                    totalSessions++;
+
+                    // If it's a single-page session (no navigation to another page)
+                    if (!hasNavigated) {
+                        singlePageSessions++;
+                    }
+
+                    // Add the current session's click count and duration to the total for today
+                    totalClicks += clickCount;
+                    totalSessionDuration += (Date.now() - sessionStartTime) / 1000; // in seconds
+
+                    // Update Firebase with new session counts and total click count
+                    sendDataToFirebase({
+                        totalSessions,
+                        singlePageSessions,
+                        totalClicks,
+                        totalSessionDuration
+                    }, `sessions/${currentDate}`);
+                }
+
+                // Function to get and store geolocation data
+                function trackGeolocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const { latitude, longitude } = position.coords;
+                                const timestamp = new Date().toISOString();
+
+                                const geoData = {
+                                    latitude,
+                                    longitude,
+                                    timestamp
+                                };
+
+                                console.log('Geolocation Data:', geoData);
+
+                                // Write geolocation data to a dedicated node
+                                sendDataToFirebase(geoData, `geolocations/${visitorID}/${timestamp.replace(/[:.]/g, '_')}`);
+                            },
+                            (error) => {
+                                console.error('Error fetching geolocation:', error.message);
+                            }
+                        );
+                    } else {
+                        console.error('Geolocation is not supported by this browser.');
+                    }
+                }
+
+                // Track Page View
+                function trackPageView() {
+                    const pageViewData = {
+                        type: "page_view",
+                        url: window.location.href,
+                        timestamp: new Date().toISOString(),
+                    };
+                    console.log('Page View Data:', pageViewData);
+                    sendDataToFirebase(pageViewData, `websiteData/${visitorID}/${new Date().toISOString().replace(/[:.]/g, '_')}`);
+
+                    // Update page view count for today
+                    trackPageViewCount();
+
+                    // Track geolocation data
+                    trackGeolocation();
+                }
+
+                // Initial Page View
+                trackPageView();
+
+                // Track Session Duration and Clicks
+                window.addEventListener('beforeunload', () => {
+                    const sessionEndTime = Date.now();
+                    const sessionDuration = (sessionEndTime - sessionStartTime) / 1000; // in seconds
+                    const sessionData = {
+                        type: "session",
+                        duration: sessionDuration,
+                        singlePageSession: !hasNavigated,
+                        clicks: clickCount,
+                    };
+                    console.log('Session Data:', sessionData);
+                    sendDataToFirebase(sessionData, `websiteData/${visitorID}/${new Date().toISOString().replace(/[:.]/g, '_')}`);
+
+                    // Update session counts and clicks
+                    trackSessions();
+                });
+
+                // Track Navigation
+                window.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') {
+                        hasNavigated = true; // User navigated to another page
+                    } else {
+                        clickCount++; // Increment click count for every click on the page
+                    }
+                });
+            </code></pre>
+        </div>
+
+        <!-- Tracker Script 2 -->
+        <div class="trc-section">
+            <h3>Tracker Script 2:</h3>
+            <p>Please embed this tracker script in the remaining pages of your target website.</p>
+            <button class="copy-btn" onclick="copyToClipboard('script2')">Copy</button>
+            <pre><code id="script2">
+                // Import necessary Firebase modules from the Firebase SDK
+                import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+                import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+            
+                // Firebase configuration
+                const firebaseConfig = {
+                  apiKey: "AIzaSyCVq9WeE1hqTdMsdT3miAUbTc9g0z0QjJ8",
+                  authDomain: "swat-173ca.firebaseapp.com",
+                  databaseURL: "https://swat-173ca-default-rtdb.firebaseio.com",
+                  projectId: "swat-173ca",
+                  storageBucket: "swat-173ca.firebasestorage.app",
+                  messagingSenderId: "948374024673",
+                  appId: "1:948374024673:web:b224c6b7262ebf927362a0",
+                  measurementId: "G-8HYY41WFS0"
+                };
+            
+                // Initialize Firebase app
+                const app = initializeApp(firebaseConfig);
+            
+                // Initialize Firebase Realtime Database
+                const db = getDatabase(app);
+            
+                // Helper functions
+                function generateVisitorID() {
+                  return '_' + Math.random().toString(36).substr(2, 9);
+                }
+            
+                // Retrieve or set Visitor ID
+                let visitorID = localStorage.getItem('visitorID') || generateVisitorID();
+                localStorage.setItem('visitorID', visitorID);
+            
+                // Log the visitor ID after it's been initialized
+                // console.log('Visitor ID:', visitorID);
+            
+                // Track session data
+                let sessionStartTime = Date.now();
+                let hasNavigated = false;
+                let clickCount = 0; // Track the number of clicks
+                console.log('Session Start Time:', sessionStartTime);
+            
+                // Function to send data to Firebase
+                function sendDataToFirebase(data) {
+                    let timestamp = new Date().toISOString();
+                    // Sanitize timestamp for use in Firebase paths
+                    timestamp = timestamp.replace(/[:.]/g, '_'); // Replace invalid characters with underscores
+            
+                    const refPath = `websiteData/${visitorID}/${timestamp}`;
+                    const dataRef = ref(db, refPath);
+                    set(dataRef, data)
+                        .then(() => {
+                            console.log('Data successfully written to Firebase:', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error writing data to Firebase:', error);
+                        });
+                }
+            
+                // Function to track page view count for the day
+                async function trackPageViewCount() {
+                    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                    const pageViewRef = ref(db, `pageViewsPerDay/${currentDate}`);
+                    const snapshot = await get(pageViewRef);
+            
+                    let pageViewCount = 0;
+            
+                    if (snapshot.exists()) {
+                        pageViewCount = snapshot.val(); // Get the current page view count for today
+                    }
+            
+                    // Increment the count
+                    pageViewCount++;
+            
+                    // Save the updated page view count back to Firebase
+                    set(pageViewRef, pageViewCount)
+                        .then(() => {
+                            console.log(`Page views for ${currentDate}: ${pageViewCount}`);
+                        })
+                        .catch((error) => {
+                            console.error('Error updating page views count:', error);
+                        });
+                }
+            
+                // Function to track sessions (total and single-page)
+                async function trackSessions() {
+                    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                    const sessionsRef = ref(db, `sessions/${currentDate}`);
+                    const snapshot = await get(sessionsRef);
+            
+                    let totalSessions = 0;
+                    let singlePageSessions = 0;
+                    let totalClicks = 0;
+                    let totalSessionDuration = 0;
+            
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        totalSessions = data.totalSessions || 0;
+                        singlePageSessions = data.singlePageSessions || 0;
+                        totalClicks = data.totalClicks || 0;
+                        totalSessionDuration = data.totalSessionDuration || 0;
+                    }
+            
+                    // Increment total sessions count
+                    totalSessions++;
+            
+                    // If it's a single-page session (no navigation to another page)
+                    if (!hasNavigated) {
+                        singlePageSessions++;
+                    }
+            
+                    // Add the current session's click count and duration to the total for today
+                    totalClicks += clickCount;
+                    totalSessionDuration += (Date.now() - sessionStartTime) / 1000; // in seconds
+            
+                    // Update Firebase with new session counts and total click count
+                    set(sessionsRef, {
+                        totalSessions,
+                        singlePageSessions,
+                        totalClicks,
+                        totalSessionDuration
+                    })
+                        .then(() => {
+                            console.log(`Total Sessions: ${totalSessions}, Single-Page Sessions: ${singlePageSessions}, Total Clicks: ${totalClicks}, Total Session Duration: ${totalSessionDuration} seconds`);
+                        })
+                        .catch((error) => {
+                            console.error('Error updating session counts:', error);
+                        });
+                }
+            
+                // Track Page View
+                function trackPageView() {
+                    const pageViewData = {
+                        type: "page_view",
+                        url: window.location.href,
+                        timestamp: new Date().toISOString(),
+                    };
+                    console.log('Page View Data:', pageViewData);
+                    sendDataToFirebase(pageViewData);
+            
+                    // Update page view count for today
+                    trackPageViewCount();
+                }
+            
+                // Track Session Duration and Clicks
+                window.addEventListener('beforeunload', () => {
+                    const sessionEndTime = Date.now();
+                    const sessionDuration = (sessionEndTime - sessionStartTime) / 1000; // in seconds
+                    const sessionData = {
+                        type: "session",
+                        duration: sessionDuration,
+                        singlePageSession: !hasNavigated,
+                        clicks: clickCount // Add click count to session data
+                    };
+                    console.log('Session Data:', sessionData);
+                    sendDataToFirebase(sessionData);
+            
+                    // Update session counts and clicks
+                    trackSessions();
+                });
+            
+                // Track Navigation
+                window.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') {
+                        hasNavigated = true; // User navigated to another page
+                        console.log('Navigation Detected:', hasNavigated);
+                    } else {
+                        clickCount++; // Increment click count for every click on the page
+                    }
+                });
+            
+                // Initial Page View
+                trackPageView();
+            </code></pre>
+        </div>
+    </div>
+    <a href="questionnaire.html" style="text-decoration: none;"> <button id="button" type="submit">Next</button></a>
+    <script>
+        // Function to copy the script content to the clipboard
+        function copyToClipboard(scriptId) {
+            const scriptContent = document.getElementById(scriptId).textContent;
+            navigator.clipboard.writeText(scriptContent)
+                .then(() => {
+                    alert("Script copied to clipboard!");
+                })
+                .catch(err => {
+                    console.error("Failed to copy script: ", err);
+                    alert("Failed to copy script. Please try again.");
+                });
+        }
+    </script>
+</body>
+
+</html>

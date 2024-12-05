@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Traffic Analysis</title>
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    
+</head>
+
+<body>
+    <main class="content">
+        <header>
+            <div class="logo">
+                <a href="intro.html"><img src="logo.png" alt="Logo" style="width: 80px; padding-left: 15px;"></a>
+            </div>
+        </header>
+        <div class="app">
+            <!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <button class="toggle-btn" id="toggleSidebar">☰</button>
+                <h2>Dashboard</h2>
+                <ul>
+                    <li class="active"><i class="fas fa-chart-line"></i> <span>Overview</span></li>
+                    <li><i class="fas fa-chart-line"></i> <a href="userBehavior.html"
+                            style="text-decoration: none; color: white;"><span>User Behavior</span></a></li>
+                    <li><i class="fas fa-globe"></i> <a href="global-traffic-map.html"
+                            style="text-decoration: none; color:white">
+                            <span>Global Traffic Map</span></a></li>
+                    <li><i class="fas fa-globe"></i> <a href="questionnaire.html"
+                            style="text-decoration: none; color:white">
+                            <span>Track New Website</span></a></li>
+                    <li><i class="fas fa-globe"></i> <a href="instructions.html"
+                            style="text-decoration: none; color:white">
+                            <span>Instructions</span></a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <h1>Welcome to your Website Traffic Dashboard</h1>
+
+                <section class="stats-section">
+                    <div class="stats">
+
+                        <p><b>Total Page Views:</b> <span id="totalPageViews">0</span></p>
+                        <p><b>Change from Yesterday:</b> <span id="pageViewsComparison">+0 (0%)</span></p>
+
+
+                        <p><b>Total Sessions:</b> <span id="totalSessions">0</span></p>
+                        <p><b>Bounce Rate:</b> <span id="bounceRate">0%</span></p>
+                    </div>
+                </section>
+
+                <!-- Charts -->
+                <section class="lc-section">
+                    <h2>Visitor Trends</h2>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <h4>Page Views</h4>
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h4>Bounce Rate Over Last 7 Days</h4>
+                            <canvas id="bounceRateLineChart"></canvas>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="pc-section">
+
+                    <div class="chart-container-pie">
+                        <h2>Bounce Rate Today</h2>
+                        <canvas id="bounceRateChart"></canvas>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+            import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+
+            // Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyCVq9WeE1hqTdMsdT3miAUbTc9g0z0QjJ8",
+                authDomain: "swat-173ca.firebaseapp.com",
+                databaseURL: "https://swat-173ca-default-rtdb.firebaseio.com",
+                projectId: "swat-173ca",
+                storageBucket: "swat-173ca.firebasestorage.app",
+                messagingSenderId: "948374024673",
+                appId: "1:948374024673:web:b224c6b7262ebf927362a0",
+                measurementId: "G-8HYY41WFS0"
+            };
+
+            // Initialize Firebase and Realtime Database
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase(app);
+
+            async function fetchAnalytics() {
+                try {
+                    // Reference to 'pageViewsPerDay', 'singlePageSessions' and 'totalSessions' in the Firebase Realtime Database
+                    const pageViewsPerDayRef = ref(database, 'pageViewsPerDay');
+                    const sessionsRef = ref(database, 'sessions'); // Assuming this contains singlePageSessions and totalSessions
+                    const snapshot = await get(pageViewsPerDayRef);
+                    const sessionsSnapshot = await get(sessionsRef);
+
+                    if (!snapshot.exists() || !sessionsSnapshot.exists()) {
+                        console.error("No data available");
+                        return;
+                    }
+
+                    const pageViewsData = snapshot.val();
+                    const sessionsData = sessionsSnapshot.val();
+                    console.log("Page Views per Day Data:", pageViewsData);
+                    console.log("Sessions Data:", sessionsData);  // Log the raw sessions data
+
+                    const currentDate = new Date();
+                    const sevenDaysAgo = new Date();
+                    sevenDaysAgo.setDate(currentDate.getDate() - 7);
+
+                    // Filter the page views data to include the last 7 days
+                    const pageViewsByDate = Object.keys(pageViewsData)
+                        .filter(date => {
+                            const dateObj = new Date(date);
+                            return dateObj >= sevenDaysAgo && dateObj <= currentDate;
+                        })
+                        .map(date => ({
+                            date,
+                            count: pageViewsData[date]
+                        }));
+
+                    console.log("Page Views by Date (Last 7 Days):", pageViewsByDate);
+
+                    // Calculate total page views
+                    const totalPageViews = pageViewsByDate.reduce((total, day) => total + day.count, 0);
+                    document.getElementById("totalPageViews").textContent = totalPageViews;
+
+                    // Calculate bounce rate for the last 7 days
+                    const bounceRateByDate = Object.keys(sessionsData)
+                        .filter(date => {
+                            const dateObj = new Date(date);
+                            return dateObj >= sevenDaysAgo && dateObj <= currentDate;
+                        })
+                        .map(date => {
+                            const singlePageSessions = sessionsData[date]?.singlePageSessions || 0;
+                            const totalSessions = sessionsData[date]?.totalSessions || 0;
+                            const bounceRate = totalSessions > 0 ? (singlePageSessions / totalSessions) * 100 : 0;
+                            return {
+                                date,
+                                bounceRate: bounceRate
+                            };
+                        });
+
+                    console.log("Bounce Rate by Date (Last 7 Days):", bounceRateByDate);
+
+                    // Update the bounce rate display for today
+                    const dateToday = new Date().toISOString().split('T')[0]; // "2024-12-05" format
+                    const latestSessionData = sessionsData[dateToday];
+                    const singlePageSessions = latestSessionData?.singlePageSessions || 0;
+                    const totalSessions = latestSessionData?.totalSessions || 0;
+                    const bounceRate = totalSessions > 0 ? (singlePageSessions / totalSessions) * 100 : 0;
+                    document.getElementById("bounceRate").textContent = bounceRate.toFixed(2) + "%";
+
+                    // Pass data to charts
+                    displayCharts(pageViewsByDate, bounceRateByDate, singlePageSessions, totalSessions);
+                } catch (error) {
+                    console.error("Fetch Error:", error);
+                }
+            }
+
+            function displayCharts(pageViewsByDate, bounceRateByDate, singlePageSessions, totalSessions) {
+                // Visitor Trends Chart (Line)
+                const visitorTrendCtx = document.getElementById("lineChart").getContext("2d");
+                new Chart(visitorTrendCtx, {
+                    type: "line",
+                    data: {
+                        labels: pageViewsByDate.map(item => item.date),
+                        datasets: [{
+                            label: "Page Views (Last 7 Days)",
+                            data: pageViewsByDate.map(item => item.count),
+                            borderColor: "#4caf50",
+                            backgroundColor: "rgba(76, 175, 80, 0.2)",
+                            fill: true,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Page Views'
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Bounce Rate Over the Last 7 Days (Line Chart)
+                const bounceRateCtx = document.getElementById("bounceRateLineChart").getContext("2d");
+                new Chart(bounceRateCtx, {
+                    type: "line",
+                    data: {
+                        labels: bounceRateByDate.map(item => item.date),
+                        datasets: [{
+                            label: "Bounce Rate (Last 7 Days)",
+                            data: bounceRateByDate.map(item => item.bounceRate),
+                            borderColor: "#ff0000",
+                            backgroundColor: "rgba(255, 0, 0, 0.2)",
+                            fill: true,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Bounce Rate (%)'
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+
+
+                // Bounce Rate Pie Chart
+                const pieBounceRateCtx = document.getElementById("bounceRateChart").getContext("2d");
+                new Chart(pieBounceRateCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Bounced Sessions', 'Engaged Sessions'],
+                        datasets: [{
+                            data: [singlePageSessions, totalSessions - singlePageSessions],
+                            backgroundColor: ['#ff0000', '#4caf50'],
+                            hoverOffset: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (tooltipItem) => {
+                                        return tooltipItem.raw + ' sessions';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            async function fetchPageViewsData() {
+                try {
+                    const pageViewsRef = ref(database, 'pageViewsPerDay');
+                    const pageViewsSnapshot = await get(pageViewsRef);
+
+                    if (!pageViewsSnapshot.exists()) {
+                        console.error("No page views data available");
+                        return;
+                    }
+
+                    const pageViewsData = pageViewsSnapshot.val();
+                    const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+                    console.log("Current Date:", currentDate);
+
+                    const yesterdayDate = new Date();
+                    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+                    const yesterdayDateString = yesterdayDate.toISOString().split('T')[0];
+                    console.log("Fetched Page Views Data:", pageViewsData);
+
+                    // Get today's and yesterday's page views count
+                    const todayPageViews = pageViewsData[currentDate] || 0;
+                    const yesterdayPageViews = pageViewsData[yesterdayDateString] || 0;
+
+                    // Calculate percentage change from yesterday to today
+                    const pageViewsChange = (todayPageViews - yesterdayPageViews);
+                    const percentageChange = yesterdayPageViews > 0
+                        ? ((pageViewsChange / yesterdayPageViews) * 100).toFixed(2)
+                        : 0;
+
+                    // Display the values
+                    document.getElementById("totalPageViews").textContent = todayPageViews;
+                    document.getElementById("pageViewsComparison").textContent = `${pageViewsChange} (${percentageChange}%) compared to yesterday`;
+
+                    // Optionally, show the top pages viewed today (if you have that data)
+                    // displayTopPages(pageViewsData[currentDate]);
+                } catch (error) {
+                    console.error("Error fetching page views data:", error);
+                }
+            }
+
+
+           
+
+            // Fetch analytics data on page load
+            fetchAnalytics();
+            window.onload = function () {
+                fetchPageViewsData();
+                setInterval(fetchPageViewsData, 60000); // Update every minute
+            };
+
+
+
+
+        </script>
+
+    </main>
+</body>
+
+</html>
