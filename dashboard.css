@@ -1,0 +1,311 @@
+/* styles/App.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    /* Optional: background color */
+    padding-left: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional: shadow for visibility */
+}
+
+/* Style for the main content */
+.content {
+    margin-top: 80px;
+    /* Adjust to header height to prevent overlap */
+    padding: 1rem;
+    /* Optional padding */
+}
+
+.app {
+    display: flex;
+}
+
+.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #2c3e50;
+}
+
+/* Top bar styles */
+.topbar {
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fefefe;
+    color: white;
+    padding: 0.5rem 1rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.topbar h1 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.search-bar {
+    width: 30%;
+    max-width: 300px;
+    min-width: 150px;
+    margin: 0 1rem;
+    padding: 0.3rem 0.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    position: absolute;
+    right: 0;
+    /* Places the search bar to the right of its container */
+}
+
+
+
+.topbar-icons {
+    display: flex;
+    gap: 1rem;
+}
+
+.topbar-icons i {
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #797878;
+}
+
+.topbar-icons i:hover {
+    color: white;
+}
+
+
+
+/* .sidebar {
+    width: 200px;
+    height: 1500px;
+    background: linear-gradient(35deg, #f136f4a8, #0f5b9ad6);
+    color: white;
+    padding: 1rem;
+} */
+
+/* styles/App.css */
+
+/* Sidebar Container */
+.sidebar {
+    width: 200px;
+    height: 190vh;
+    color: white;
+    padding: 2rem 1rem;
+    background: linear-gradient(175deg, #8d19a4af, #fdcf657e);
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    font-family: Arial, sans-serif;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+    padding: 2rem 0.5rem;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    color: #ecf0f1;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed h2 {
+    opacity: 0;
+}
+
+/* Sidebar Links */
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.sidebar li {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #ecf0f1;
+    font-weight: 500;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.sidebar.collapsed li {
+    justify-content: center;
+}
+
+.sidebar li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #373737;
+}
+
+/* Icon Style for Sidebar Links */
+.sidebar li i {
+    font-size: 1.2rem;
+    color: #ecf0f1;
+    margin-right: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.sidebar.collapsed li i {
+    margin-right: 0;
+}
+
+/* Text label visibility */
+.sidebar li span {
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed li span {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+/* Collapsible Button */
+.sidebar .toggle-btn {
+    background: none;
+    border: none;
+    color: #ecf0f1;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+
+
+.main-content {
+    flex: 1;
+    padding: 1rem;
+}
+
+.charts-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+/* 
+.chart-container {
+    width: 100%;
+    
+    text-align: center;
+    padding: 20px;
+} */
+
+.chart-container-pie {
+    max-width: 400px;
+    width: 100%;
+    margin: 40px auto;
+    text-align: center;
+    /* margin: 20px auto; */
+}
+
+.chart-container h3 {
+    margin-bottom: 1rem;
+}
+
+.stats-section {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.stats-section p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+/* .charts-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} */
+
+.chart-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+/* canvas {
+    display: block;
+    margin: 0 auto;
+} */
+
+#bounceRateLineChart {
+    width: 100%;
+    margin: 10px;
+}
+
+#lineChart {
+    width: 100%;
+    margin: 10px;
+}
+
+.lc-section {
+    margin: 0 auto;
+    padding: 20px;
+    /* max-width: 800px; */
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+
+.pc-section {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.bc-section {
+    margin: 0 auto;
+    padding: 20px;
+    /* max-width: 800px; */
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#clicksPerDayChart {
+    width: 100%;
+    margin: 20px;
+}
+
+#sessionDurationChart {
+    width: 100%;
+    margin: 20px;
+}
+
