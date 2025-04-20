@@ -29,7 +29,7 @@ Google OAuth 2.0 for authentication and authorization with Google Analytics
 # Usage
 
 ### View Analytics:
-Access the /analytics endpoint to view real-time analytics, including the number of sessions, bounce rate, and Google Analytics data.
+Access the dashboard.html file to view real-time analytics, including the number of sessions, bounce rate, and Google Analytics data.
 
 ### View Visualizations:
 Open the userbehaviour.html file to see interactive charts for website traffic, page views, bounce rate, and user behavior.
