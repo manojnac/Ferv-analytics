@@ -26,24 +26,6 @@ Node.js with Express.js for the server-side application
 Firebase Admin SDK for interacting with Firebase Realtime Database
 Google OAuth 2.0 for authentication and authorization with Google Analytics
 
-# Installation
-
-### Clone the repository:
-git clone https://github.com/manojnac/Ferv-analytics.git
-cd Ferv-analytics
-
-### Install the dependencies:
-npm install
-
-### Add your Firebase service account key in the project directory as serviceAccountKey.json.
-
-### Set up Google OAuth 2.0 credentials. Create a project on Google Cloud Console, enable Google Analytics API, and download the credentials.
-
-### Run the application:
-npm start
-
-### The server will start on http://localhost:3000.
-
 # Usage
 
 ### View Analytics:
