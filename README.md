@@ -1,7 +1,7 @@
-Ferv Analytics
+#Ferv Analytics
 Ferv Analytics is a website traffic analysis application designed to provide insights into website performance, including user behavior, traffic sources, and bounce rates. It integrates data from Firebase Realtime Database and Google Analytics to provide real-time metrics and visualizations through interactive charts.
 
-Features
+#Features
 Traffic Analysis: Real-time tracking of website traffic, user sessions, and page views.
 
 Bounce Rate Calculation: Calculate bounce rate based on session data.
@@ -12,26 +12,20 @@ User Behavior Insights: Analyze user behavior, including active users, returning
 
 Dynamic Visualizations: Visualize traffic trends, page views, bounce rates, and user behavior through interactive charts using Chart.js.
 
-Technologies Used
+#Technologies Used
+
 Frontend:
-
 HTML, CSS, JavaScript
-
 Chart.js for data visualizations
-
 Firebase for storing traffic data in Realtime Database
-
 Google Analytics API for fetching traffic analytics
 
 Backend:
-
 Node.js with Express.js for the server-side application
-
 Firebase Admin SDK for interacting with Firebase Realtime Database
-
 Google OAuth 2.0 for authentication and authorization with Google Analytics
 
-Installation
+#Installation
 
 Clone the repository:
 git clone https://github.com/manojnac/Ferv-analytics.git
@@ -49,7 +43,7 @@ npm start
 
 The server will start on http://localhost:3000.
 
-Usage
+#Usage
 
 Authenticate with Google Analytics:
 Navigate to http://localhost:3000/auth to authenticate and get access to your Google Analytics data.
@@ -67,5 +61,5 @@ Access the /analytics endpoint to view real-time analytics, including the number
 View Visualizations:
 Open the userbehaviour.html file to see interactive charts for website traffic, page views, bounce rate, and user behavior.
 
-Contributing
+#Contributing
 Contributions are welcome! If you find any issues or want to add new features, feel free to fork the repository and submit a pull request.
