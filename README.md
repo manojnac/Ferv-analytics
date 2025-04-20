@@ -1,7 +1,8 @@
-#Ferv Analytics
+# Ferv Analytics
 Ferv Analytics is a website traffic analysis application designed to provide insights into website performance, including user behavior, traffic sources, and bounce rates. It integrates data from Firebase Realtime Database and Google Analytics to provide real-time metrics and visualizations through interactive charts.
 
-#Features
+# Features
+
 Traffic Analysis: Real-time tracking of website traffic, user sessions, and page views.
 
 Bounce Rate Calculation: Calculate bounce rate based on session data.
@@ -12,54 +13,44 @@ User Behavior Insights: Analyze user behavior, including active users, returning
 
 Dynamic Visualizations: Visualize traffic trends, page views, bounce rates, and user behavior through interactive charts using Chart.js.
 
-#Technologies Used
+# Technologies Used
 
-Frontend:
+## Frontend:
 HTML, CSS, JavaScript
 Chart.js for data visualizations
 Firebase for storing traffic data in Realtime Database
 Google Analytics API for fetching traffic analytics
 
-Backend:
+## Backend:
 Node.js with Express.js for the server-side application
 Firebase Admin SDK for interacting with Firebase Realtime Database
 Google OAuth 2.0 for authentication and authorization with Google Analytics
 
-#Installation
+# Installation
 
-Clone the repository:
+### Clone the repository:
 git clone https://github.com/manojnac/Ferv-analytics.git
 cd Ferv-analytics
 
-Install the dependencies:
+### Install the dependencies:
 npm install
 
-Add your Firebase service account key in the project directory as serviceAccountKey.json.
+### Add your Firebase service account key in the project directory as serviceAccountKey.json.
 
-Set up Google OAuth 2.0 credentials. Create a project on Google Cloud Console, enable Google Analytics API, and download the credentials.
+### Set up Google OAuth 2.0 credentials. Create a project on Google Cloud Console, enable Google Analytics API, and download the credentials.
 
-Run the application:
+### Run the application:
 npm start
 
-The server will start on http://localhost:3000.
+### The server will start on http://localhost:3000.
 
-#Usage
+# Usage
 
-Authenticate with Google Analytics:
-Navigate to http://localhost:3000/auth to authenticate and get access to your Google Analytics data.
-
-After successful authentication, the access token is saved in Firebase.
-
-Track Traffic:
-
-Send POST requests to the /store-url endpoint with the URL you want to track.
-The traffic data is saved in Firebase Realtime Database.
-
-View Analytics:
+### View Analytics:
 Access the /analytics endpoint to view real-time analytics, including the number of sessions, bounce rate, and Google Analytics data.
 
-View Visualizations:
+### View Visualizations:
 Open the userbehaviour.html file to see interactive charts for website traffic, page views, bounce rate, and user behavior.
 
-#Contributing
+# Contributing
 Contributions are welcome! If you find any issues or want to add new features, feel free to fork the repository and submit a pull request.
